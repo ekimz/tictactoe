@@ -33,10 +33,22 @@ def board_visual(board):
     print('  :=== === ===:')
 
 
+def winning_visual(board):
+    print('✩*⋆｡*      A   B   C    *｡⋆*✩')  # this is for reference to the columns
+    print('*｡⋆*✩    :=== === ===:  ✩*⋆｡*')
+    print('✩*⋆｡*  1 : ' + board['1A'] + ' | ' + board['1B'] + ' | ' + board['1C'] + ' :  *｡⋆*✩')  # and reference to rows
+    print('*｡⋆*✩    :---+---+---:  ✩*⋆｡*')
+    print('✩*⋆｡*  2 : ' + board['2A'] + ' | ' + board['2B'] + ' | ' + board['2C'] + ' :  *｡⋆*✩')
+    print('*｡⋆*✩    :---+---+---:  ✩*⋆｡*')
+    print('✩*⋆｡*  3 : ' + board['3A'] + ' | ' + board['3B'] + ' | ' + board['3C'] + ' :  *｡⋆*✩')
+    print('*｡⋆*✩    :=== === ===:  ✩*⋆｡*')
+
+
 # well I still want players, so we have to add that
 class Player:
-    def __init__(self, name, role):
+    def __init__(self, name, dice, role):
         self.name = name
+        self.dice = dice
         self.role = role
 
 
@@ -57,6 +69,11 @@ def throw_dice(player_one, player_two):
     player_two.role = random.randint(1, 6) + random.randint(1, 6)
     print('You just rolled a ' + str(player_two.role) + '! Great going, ' + player_two.name + '!')
 
+    if player_one.role != player_two.role:
+        pick_role(player_one, player_two)
+    else:
+        throw_dice(player_one, player_two)
+
 
 def pick_role(player_one, player_two):
     if player_one.role > player_two.role:
@@ -65,9 +82,6 @@ def pick_role(player_one, player_two):
     elif player_one.role < player_two.role:
         winner = player_two
         loser = player_one
-    else:
-        print('I see we have a tie! Let\'s try that again, shall we?')
-        throw_dice(player_one, player_two)
 
     print(winner.name + ' won! Now you can decide: Would you like to be X or O?')
     chosen_role = input()
@@ -92,6 +106,7 @@ def pick_role(player_one, player_two):
 
 def tic_tac_toe(player_one, player_two, board):
     player_role = 'X'  # The game will always start with 'X', so no need to associate with variable
+    victory = 0
 
     if player_one.role == 'X':
         player_x = player_one
@@ -100,7 +115,7 @@ def tic_tac_toe(player_one, player_two, board):
         player_x = player_one
         player_o = player_two
 
-    for i in range(9):
+    while victory == 0:
         board_visual(board)  # show the board since we're visual creatures
         print('\n')
         if player_role == 'X':
@@ -112,14 +127,23 @@ def tic_tac_toe(player_one, player_two, board):
         all_the_right_moves(board, player_role)
 
         # if someone has won, you gotta give the celebratory speech
-        victory = did_they_win_though(board)
+        victory = did_they_win_though(board)  # grab the check to see if someone won
 
         if victory == 1:
+            winning_visual(board)
+            print('\n')
             print('It\'s over pufferfish, ' + player_x.name + ' wins this time!')  # yay, there's a winner!
+
         elif victory == 2:
+            winning_visual(board)
+            print('\n')
             print('It\'s over pufferfish, ' + player_o.name + ' wins this time!')
+
         elif victory == 3:
+            board_visual(board)
+            print('\n')
             print('ESH, but there can always be another game.. jk... unless...?')  # if nobody wins, it's a tie
+
         else:
             if player_role == 'X':
                 player_role = 'O'
@@ -204,21 +228,7 @@ def game_play():
     print('We\'re ready to rumble!! ')
     tic_tac_toe(player_1, player_2, main_board)
 
-    # you gotta take roles doing this thing
-    # player one takes a role, and then player two
-    # after someone puts down
-
-
-# we need to define a player taking a role on the board, takes player and board move
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     game_play()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

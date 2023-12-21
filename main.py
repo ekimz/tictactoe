@@ -23,13 +23,14 @@ for key in main_board:
 
 # we are defining the bizual effex of the tic-tac-toe game
 def board_visual(board):
-    print('     A   B   C')  # this is for reference to the columns
-    print('    === === ===')
-    print('1  :  ' + board['1A'] + ' | ' + board['1B'] + ' | ' + board['1C'])  # and reference to rows
-    print('   : ---+---+---')
-    print('2  :  ' + board['2A'] + ' | ' + board['2B'] + ' | ' + board['2C'])
-    print('   : ---+---+---')
-    print('3  :  ' + board['3A'] + ' | ' + board['3B'] + ' | ' + board['3C'])
+    print('    A   B   C')  # this is for reference to the columns
+    print('  :=== === ===:')
+    print('1 : ' + board['1A'] + ' | ' + board['1B'] + ' | ' + board['1C'] + ' :')  # and reference to rows
+    print('  :---+---+---:')
+    print('2 : ' + board['2A'] + ' | ' + board['2B'] + ' | ' + board['2C'] + ' :')
+    print('  :---+---+---:')
+    print('3 : ' + board['3A'] + ' | ' + board['3B'] + ' | ' + board['3C'] + ' :')
+    print('  :=== === ===:')
 
 
 # well I still want players, so we have to add that
@@ -58,9 +59,6 @@ def throw_dice(player_one, player_two):
 
 
 def pick_role(player_one, player_two):
-    winner = ''
-    loser = ''
-
     if player_one.role > player_two.role:
         winner = player_one
         loser = player_two
@@ -104,6 +102,7 @@ def tic_tac_toe(player_one, player_two, board):
 
     for i in range(9):
         board_visual(board)  # show the board since we're visual creatures
+        print()
         if player_role == 'X':
             print('Gotta catch \'em all, ' + player_x.name + ', put down your ' + player_x.role + '!')
         else:

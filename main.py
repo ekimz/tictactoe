@@ -46,7 +46,7 @@ def throw_dice(player_one, player_two):
     input()
 
     # generate random number and assign to role for player 1
-    player_one.role = random.randint(1, 12)
+    player_one.role = random.randint(1, 6) + random.randint(1, 6)
 
     print('You just rolled a ' + str(player_one.role) + '! Good job, ' + player_one.name + '!')
     print('Let\'s see how you do, ' + player_two.name + '.')
@@ -54,7 +54,7 @@ def throw_dice(player_one, player_two):
     input()
 
     # generate random number and assign to role for player 1
-    player_two.role = random.randint(1, 12)
+    player_two.role = random.randint(1, 6) + random.randint(1, 6)
     print('You just rolled a ' + str(player_two.role) + '! Great going, ' + player_two.name + '!')
 
 
@@ -102,28 +102,14 @@ def tic_tac_toe(player_one, player_two, board):
 
     for i in range(9):
         board_visual(board)  # show the board since we're visual creatures
-        print()
+        print('\n')
         if player_role == 'X':
             print('Gotta catch \'em all, ' + player_x.name + ', put down your ' + player_x.role + '!')
         else:
             print('Gotta catch \'em all, ' + player_o.name + ', put down your ' + player_o.role + '!')
 
         # this is for adding any moves since from here on out they're just gonna be making moves
-        move = input()  # 1A, 1B, 1C, 2A, 2B, 2C, 3A, 3B, 3C
-
-        # when the move is not any of these
-        while move not in ('1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C'):
-            print('Hey that\'s illegal! Give me a real move.')
-            move = input()
-
-        else:
-            # you can move to a spot that has NOT been filled
-            if board[move] == ' ':
-                board[move] = player_role
-            elif board[move] == 'X' or board[move] == 'O':  # you can't move there since it's been filled
-                print('You wish you could move there. Give it another shot.')
-            else:
-                print('That\'s not a real move. Once more, with vigor.')  # invalid move
+        all_the_right_moves(board, player_role)
 
         # if someone has won, you gotta give the celebratory speech
         victory = did_they_win_though(board)
@@ -139,6 +125,26 @@ def tic_tac_toe(player_one, player_two, board):
                 player_role = 'O'
             else:
                 player_role = 'X'
+
+
+def all_the_right_moves(board, player_role):
+    # define the move as what you get
+    move = input()
+
+    while move in ('1A', '1B', '1C', '2A', '2B', '2C', '3A', '3B', '3C'):
+        if board[move] == ' ':
+            board[move] = player_role
+            break
+        else:
+            if board[move] == 'X' or board[move] == 'O':  # you can't move there since it's been filled
+                print('You wish you could move there. Give it another shot.')
+                move = input()
+            else:
+                print('That\'s not a real move. Once more, with vigor.')  # invalid move
+                move = input()
+    else:
+        print('Hey that\'s illegal! Give me a real move.')
+        all_the_right_moves(board, player_role)
 
 
 def did_they_win_though(board):

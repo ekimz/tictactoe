@@ -13,12 +13,10 @@ main_board = {'1A': ' ', '1B': ' ', '1C': ' ',  # rows are 1, 2, 3
               '2A': ' ', '2B': ' ', '2C': ' ',  # cols are A, B, C
               '3A': ' ', '3B': ' ', '3C': ' '}
 
-# the keys will change depending on the moves that are made
-board_keys = []
 
-# this is to continuously add the roles that occur
-for key in main_board:
-    board_keys.append(key)
+def clear_board(board):
+    for key in board.keys():
+        board[key] = ' '
 
 
 # we are defining the bizual effex of the tic-tac-toe game
@@ -36,7 +34,8 @@ def board_visual(board):
 def winning_visual(board):
     print('✩*⋆｡*      A   B   C    *｡⋆*✩')  # this is for reference to the columns
     print('*｡⋆*✩    :=== === ===:  ✩*⋆｡*')
-    print('✩*⋆｡*  1 : ' + board['1A'] + ' | ' + board['1B'] + ' | ' + board['1C'] + ' :  *｡⋆*✩')  # and reference to rows
+    print(
+        '✩*⋆｡*  1 : ' + board['1A'] + ' | ' + board['1B'] + ' | ' + board['1C'] + ' :  *｡⋆*✩')  # and reference to rows
     print('*｡⋆*✩    :---+---+---:  ✩*⋆｡*')
     print('✩*⋆｡*  2 : ' + board['2A'] + ' | ' + board['2B'] + ' | ' + board['2C'] + ' :  *｡⋆*✩')
     print('*｡⋆*✩    :---+---+---:  ✩*⋆｡*')
@@ -46,9 +45,8 @@ def winning_visual(board):
 
 # well I still want players, so we have to add that
 class Player:
-    def __init__(self, name, dice, role):
+    def __init__(self, name, role):
         self.name = name
-        self.dice = dice
         self.role = role
 
 
@@ -94,14 +92,12 @@ def pick_role(player_one, player_two):
         loser.role = 'O'
         print('Okay! It\'s decided: ' + winner.name + ' will be X, and ' + loser.name + ' will be O.')
         print(winner.name + ', since you are X, you will start the game. Good luck!')
-        # tic_tac_toe(winner)
 
     else:
         winner.role = 'O'
         loser.role = 'X'
         print('Okay! It\'s decided: ' + winner.name + ' will be O, and ' + loser.name + ' will be X.')
         print(loser.name + ', since you are X, you will commence the game. No pressure...')
-        # tic_tac_toe(loser)
 
 
 def tic_tac_toe(player_one, player_two, board):
@@ -112,8 +108,8 @@ def tic_tac_toe(player_one, player_two, board):
         player_x = player_one
         player_o = player_two
     else:
-        player_x = player_one
-        player_o = player_two
+        player_x = player_two
+        player_o = player_one
 
     while victory == 0:
         board_visual(board)  # show the board since we're visual creatures
@@ -133,16 +129,19 @@ def tic_tac_toe(player_one, player_two, board):
             winning_visual(board)
             print('\n')
             print('It\'s over pufferfish, ' + player_x.name + ' wins this time!')  # yay, there's a winner!
+            play_again(player_one, player_two, board)
 
         elif victory == 2:
             winning_visual(board)
             print('\n')
             print('It\'s over pufferfish, ' + player_o.name + ' wins this time!')
+            play_again(player_one, player_two, board)
 
         elif victory == 3:
             board_visual(board)
             print('\n')
             print('ESH, but there can always be another game.. jk... unless...?')  # if nobody wins, it's a tie
+            play_again(player_one, player_two, board)
 
         else:
             if player_role == 'X':
@@ -191,16 +190,25 @@ def did_they_win_though(board):
             (board['1A'] == board['2B'] == board['3C'] == 'O') or \
             (board['3A'] == board['2B'] == board['1C'] == 'O'):
         idk_you_tell_me = 2
-    elif (board['1A'] == board['1B'] == board['1C'] != ' ') or \
-            (board['2A'] == board['2B'] == board['2C'] != ' ') or \
-            (board['3A'] == board['3B'] == board['3C'] != ' ') or \
-            (board['1A'] == board['2A'] == board['3A'] != ' ') or \
-            (board['1B'] == board['2B'] == board['3B'] != ' ') or \
-            (board['1C'] == board['2C'] == board['3C'] != ' ') or \
-            (board['1A'] == board['2B'] == board['3C'] != ' ') or \
-            (board['3A'] == board['2B'] == board['1C'] != ' '):
+    elif all( board[key] != ' ' for key in board.keys()):
         idk_you_tell_me = 3
     return idk_you_tell_me
+
+
+def play_again(player_one, player_two, board):
+    print('Would you like to play another round? Y/N')
+    answer = input()
+
+    # if they're just keyboard mashing
+    while answer != 'Y' and answer != 'N':
+        print('It\'s a yes or no question, help a robot out. Y/N?')
+        answer = input()
+    else:
+        if answer == 'Y':  # Yay they want to play again! Good job team!
+            clear_board(board)
+            tic_tac_toe(player_one, player_two, board)
+        elif answer == 'N':  # It's okay they have things to do!
+            print('Thanks for playing! See you next time~')
 
 
 def game_play():
@@ -222,7 +230,6 @@ def game_play():
 
     print('To begin this wretched game of tic tac toe, you will throw some elbo--I mean dice.')
     throw_dice(player_1, player_2)
-    pick_role(player_1, player_2)
 
     # The logic of the game itself:
     print('We\'re ready to rumble!! ')
